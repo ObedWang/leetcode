@@ -53,10 +53,6 @@ HELP.md
 ### IntelliJ IDEA ###
 *.iws
 *.ipr
-crm-beans/target/
-crm-client/target/
-crm-server/target/
-crm-server/src/test/
 /mybatis_generator
 ### NetBeans ###
 /nbproject/private/
@@ -71,3 +67,5 @@ crm-server/src/test/
 
 *.jar
 *.log
+doc/
+.json
