@@ -1,4 +1,4 @@
-//给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。 
+//给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
 //
 // 
 //
@@ -25,61 +25,42 @@
 //
 // 
 // n == height.length 
-// 0 <= n <= 3 * 104 
-// 0 <= height[i] <= 105 
+// 1 <= n <= 2 * 10⁴ 
+// 0 <= height[i] <= 10⁵ 
 // 
-// Related Topics 栈 数组 双指针 动态规划 
-// 👍 2403 👎 0
+//
+// Related Topics 栈 数组 双指针 动态规划 单调栈 👍 6326 👎 0
+
 
 package editor.cn;
 
-/**
- * @author web
- */
 public class TrappingRainWater {
     public static void main(String[] args) {
         Solution solution = new TrappingRainWater().new Solution();
-        System.out.println(solution.trap(new int[]{0,1,0,2,1,0,1,3,2,1,2,1})==6);
-        System.out.println(solution.trap(new int[]{2,0,2})==2);
-        System.out.println(solution.trap(new int[]{5,4,3,2,1,2,3,4,5})==16);
-        System.out.println(solution.trap(new int[]{5,4,3,2,1,2,3,4})==9);
-    }
-        //leetcode submit region begin(Prohibit modification and deletion)
-class Solution {
-    public int trap(int[] height) {
-        int left = 0, right = height.length - 1;
-        int ans = 0;
-        int left_max = 0, right_max = 0;
-        while (left < right) {
-            if (height[left] < height[right]) {
-                if (height[left] >= left_max) {
-                    left_max = height[left];
-                } else {
-                    ans += (left_max - height[left]);
-                }
-                ++left;
-            } else {
-                if (height[right] >= right_max) {
-                    right_max = height[right];
-                } else {
-                    ans += (right_max - height[right]);
-                }
-                --right;
-            }
-        }
-        return ans;
+        System.out.println(solution.trap(new int[]{4,2,0,3,2,5}));
     }
 
-    private int cal(int[] height,int start,int end){
-        if(end-start<=1) return 0;
-        int width = Math.min(height[start],height[end]);
-        int ans = 0;
-        for(int i=start+1;i<end;i++){
-            ans+=(width-height[i]);
+    //leetcode submit region begin(Prohibit modification and deletion)
+    class Solution {
+        public int trap(int[] height) {
+            int ans = 0;
+            int left = 1,right=height.length-2,leftMax = height[0],rightMax = height[height.length-1];
+            while(left<right){
+                leftMax = Math.max(leftMax,height[left]);
+                rightMax = Math.max(rightMax,height[right]);
+                if(leftMax<=rightMax){
+                    ans += leftMax-height[left];
+                    left++;
+                }else {
+                    ans += rightMax -height[right];
+                    right--;
+                }
+
+            }
+            ans+=leftMax - height[left];
+            return ans;
         }
-        return ans;
     }
-}
 //leetcode submit region end(Prohibit modification and deletion)
 
 }
