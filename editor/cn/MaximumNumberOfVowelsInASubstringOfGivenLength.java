@@ -1,4 +1,4 @@
-  //给你字符串 s 和整数 k 。 
+//给你字符串 s 和整数 k 。
 //
 // 请返回字符串 s 中长度为 k 的单个子字符串中可能包含的最大元音字母数。 
 //
@@ -52,18 +52,42 @@
 //
 // Related Topics 字符串 滑动窗口 👍 247 👎 0
 
-  
-  package editor.cn;
-  public class MaximumNumberOfVowelsInASubstringOfGivenLength{
-      public static void main(String[] args) {
-           Solution solution = new MaximumNumberOfVowelsInASubstringOfGivenLength().new Solution();
-      }
-      //leetcode submit region begin(Prohibit modification and deletion)
-class Solution {
-    public int maxVowels(String s, int k) {
-        
+
+package editor.cn;
+
+public class MaximumNumberOfVowelsInASubstringOfGivenLength {
+    public static void main(String[] args) {
+        Solution solution = new MaximumNumberOfVowelsInASubstringOfGivenLength().new Solution();
     }
-}
+
+    //leetcode submit region begin(Prohibit modification and deletion)
+    class Solution {
+        public int maxVowels(String s, int k) {
+            if (k > s.length()) return 0;
+            int left = 0, right = 0;
+            int ans = 0;
+            char[] charArray = s.toCharArray();
+            for (; right < k; right++) {
+                if (isVowel(charArray[right])) {
+                    ans++;
+                }
+            }
+            int tempAns = ans;
+            for (; right < s.length(); right++, left++) {
+                if (ans == k) break;
+                if (isVowel(charArray[right])) tempAns++;
+                if (isVowel(charArray[left])) tempAns--;
+                ans = Math.max(ans, tempAns);
+            }
+
+            return ans;
+
+        }
+
+        private boolean isVowel(char c) {
+            return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
+        }
+    }
 //leetcode submit region end(Prohibit modification and deletion)
 
-  }
+}
