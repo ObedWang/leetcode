@@ -69,3 +69,5 @@ HELP.md
 *.log
 doc/
 .json
+# macOS
+.DS_Store
