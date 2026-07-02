@@ -34,7 +34,9 @@ package editor.cn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author web
@@ -55,43 +57,77 @@ public class MergeIntervals {
         };
         System.out.println(Arrays.deepToString(solution.merge(arr)));
         arr = new int[][]{
-                {1, 1},{3,3},{4,10}
+                {1, 1}, {3, 3}, {4, 10}
         };
         System.out.println(Arrays.deepToString(solution.merge(arr)));
         arr = new int[][]{
-                {1, 4},{2,3}
+                {1, 4}, {2, 3}
+        };
+        System.out.println(Arrays.deepToString(solution.merge(arr)));
+        arr = new int[][]{
+                {1, 4}, {1, 5}
         };
         System.out.println(Arrays.deepToString(solution.merge(arr)));
     }
 
-        //leetcode submit region begin(Prohibit modification and deletion)
-class Solution {
-    public int[][] merge(int[][] intervals) {
-        Arrays.sort(intervals, (o1, o2) -> {
-            if(o1[0]==o2[0]){
-                return o1[1]-o2[1];
-            }else return o1[0]-o2[0];
-        });
-        List<int[]> list = new ArrayList<>();
-        int index = 0;
-        while(index< intervals.length){
-            int[] subArr= new int[2];
-            subArr[0] = intervals[index][0];
-            subArr[1] = intervals[index][1];
-            int end = index+1;
-            while(end< intervals.length){
-                if(intervals[end][0]>subArr[1]){
-                    break;
-                }
-                subArr[1] = Math.max(intervals[end][1],subArr[1]);
-                end++;
+    //leetcode submit region begin(Prohibit modification and deletion)
+    class Solution {
+
+        public int[][] merge(int[][] intervals) {
+            if(intervals.length==1){
+                return intervals;
             }
-            list.add(subArr);
-            index = end;
+            //sort
+            Arrays.sort(intervals, (x, y) -> {
+                if (x[0] != y[0]) return x[0] - y[0];
+                else return x[1] - y[1];
+            });
+            List<int[]> ans = new ArrayList<>();
+            int left = intervals[0][0],right = intervals[0][1];
+            for(int i=1;i<intervals.length;i++){
+                int[] cur = intervals[i];
+                if(cur[0]<=right){
+                    left = Math.min(left,cur[0]);
+                    right = Math.max(right,cur[1]);
+                }else{
+                    ans.add(new int[]{left,right});
+                    left = cur[0];
+                    right = cur[1];
+                }
+                if(i== intervals.length-1){
+                    ans.add(new int[]{left,right});
+                }
+            }
+            return ans.toArray(new int[][]{});
+
         }
-        return list.toArray(new int[][]{});
+
+//    public int[][] merge(int[][] intervals) {
+//        Arrays.sort(intervals, (o1, o2) -> {
+//            if(o1[0]==o2[0]){
+//                return o1[1]-o2[1];
+//            }else return o1[0]-o2[0];
+//        });
+//        List<int[]> list = new ArrayList<>();
+//        int index = 0;
+//        while(index< intervals.length){
+//            int[] subArr= new int[2];
+//            subArr[0] = intervals[index][0];
+//            subArr[1] = intervals[index][1];
+//            int end = index+1;
+//            while(end< intervals.length){
+//                if(intervals[end][0]>subArr[1]){
+//                    break;
+//                }
+//                subArr[1] = Math.max(intervals[end][1],subArr[1]);
+//                end++;
+//            }
+//            list.add(subArr);
+//            index = end;
+//        }
+//        return list.toArray(new int[][]{});
+//    }
     }
-}
 //leetcode submit region end(Prohibit modification and deletion)
 
 }

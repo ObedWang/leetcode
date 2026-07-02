@@ -43,51 +43,82 @@
 
 package editor.cn;
 
+import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.PriorityQueue;
 
 public class SlidingWindowMaximum {
     public static void main(String[] args) {
         Solution solution = new SlidingWindowMaximum().new Solution();
-        System.out.println(solution.maxSlidingWindow(new int[]{1,3,-1,-3,5,3,6,7},3));
+        System.out.println(Arrays.toString(solution.maxSlidingWindow(new int[]{1,-1}, 1)));
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
+        //单调队列
         public int[] maxSlidingWindow(int[] nums, int k) {
+            ArrayDeque<int[]> deque = new ArrayDeque<>();
             int ansLength = nums.length - k + 1;
-            if (ansLength <= 0) {
-                int ans = Integer.MIN_VALUE;
-                for (int i = 0; i < nums.length; i++) {
-                    ans = Math.max(ans, nums[i]);
+
+            for (int i = 0; i < k; i++) {
+
+                int[] last = deque.peekLast();
+                while (last != null && last[0] < nums[i]) {
+                    deque.pollLast();
+                    last = deque.peekLast();
                 }
-                return new int[]{ans};
+                deque.add(new int[]{nums[i], i});
             }
             int[] ans = new int[ansLength];
-            PriorityQueue<int[]> queue = new PriorityQueue<>(new Comparator<int[]>() {
-                @Override
-                public int compare(int[] o1, int[] o2) {
-                    return o1[0] == o2[0] ? o2[1] - o1[1] : o2[0] - o1[0];
+            ans[0] = deque.peek()[0];
+            for (int i = 1; i < ans.length; i++) {
+                int idx = i + k - 1;
+
+                int[] first = deque.peek();
+                while (first!=null&&first[1] < i) {
+                    deque.poll();
+                    first = deque.peek();
                 }
-            });
-            for (int i = 0; i < k; i++) {
-                queue.add(new int[]{nums[i], i});
-            }
-            for (int i = 0; i < nums.length - k + 1; i++) {
-                int[] arr = queue.peek();
-                while (arr[1] < i) {
-                    queue.poll();
-                    arr = queue.peek();
+                int[] last = deque.peekLast();
+                while (last != null && last[0] < nums[idx]) {
+                    deque.pollLast();
+                    last = deque.peekLast();
                 }
-                ans[i] = arr[0];
-                //idx in window
-                //idx not in window
-                if(i==nums.length-k) break;
-                queue.add(new int[]{nums[i + k], i + k});
+                deque.add(new int[]{nums[idx], idx});
+                ans[i] = deque.peek()[0];
             }
             return ans;
-
         }
+
+
+        //优先队列
+//        public int[] maxSlidingWindow(int[] nums, int k) {
+//            int ansLength = nums.length-k+1;
+//            PriorityQueue<int[]> pq = new PriorityQueue<>(new Comparator<int[]>() {
+//                @Override
+//                public int compare(int[] o1, int[] o2) {
+//                    return o1[0]==o2[0]?o2[1]-o1[1]:o2[0]-o1[0];
+//                }
+//            });
+//
+//            for(int i=0;i<k;i++){
+//                pq.add(new int[]{nums[i],i});
+//            }
+//            int[] ans = new int[ansLength];
+//            ans[0] = pq.peek()[0];
+//            for(int i=1;i<ansLength;i++){
+//                pq.add(new int[]{nums[i+k-1],i+k-1});
+//                int[] peek = pq.peek();
+//                while(peek[1]<i) {
+//                    pq.poll();
+//                    peek = pq.peek();
+//                }
+//                ans[i] = peek[0];
+//            }
+//            return ans;
+//        }
     }
 //leetcode submit region end(Prohibit modification and deletion)
 
